@@ -1,18 +1,32 @@
 const { useState } = React;
 
-function App() {
-  const [exercises, setExercises] = useState([]);
-  const [settings, setSettings] = useState({ weight: '', height: '', goal: '' });
-  const [calendar, setCalendar] = useState({});
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+interface Exercise {
+  name: string;
+  sets: number;
+  reps: number;
+  weight: string;
+  day: string;
+}
 
-  const addExercise = (e) => {
+interface Settings {
+  weight: string;
+  height: string;
+  goal: string;
+}
+
+function App() {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [settings, setSettings] = useState<Settings>({ weight: '', height: '', goal: '' });
+  const [calendar, setCalendar] = useState<Record<string, Exercise[]>>({});
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+
+  const addExercise = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = e.target;
-    const newExercise = {
+    const form = e.currentTarget;
+    const newExercise: Exercise = {
       name: form.name.value,
-      sets: form.sets.value,
-      reps: form.reps.value,
+      sets: Number(form.sets.value),
+      reps: Number(form.reps.value),
       weight: form.weight.value,
       day: form.day.value
     };
@@ -24,7 +38,7 @@ function App() {
     form.reset();
   };
 
-  const updateSetting = (e) => {
+  const updateSetting = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSettings({ ...settings, [name]: value });
   };
